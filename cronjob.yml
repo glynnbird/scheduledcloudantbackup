@@ -1,0 +1,29 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: backup
+spec:
+  # run at the top of every hour see https://crontab.guru/#0_*_*_*_*
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: backup
+            # the name of your image in the registry
+            image: uk.icr.io/scheduledbackup/backup:1
+            # environment variables
+            env:
+              # add your Cloudant & Cloud Object Storage config here
+              - name: COUCH_URL
+                value: "https://<username>:<password>@<host>/<database>"
+              - name: COS_ENDPOINT_URL
+                value: "https://s3.<region>.cloud-object-storage.appdomain.cloud/"
+              - name: COS_BUCKET
+                value: "<bucket>"
+              - name: AWS_ACCESS_KEY_ID
+                value: "<access key id>"
+              - name: AWS_SECRET_ACCESS_KEY
+                value: "<secret access key>"                
+          restartPolicy: OnFailure
