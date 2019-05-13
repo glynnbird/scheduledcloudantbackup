@@ -30,7 +30,7 @@ npm install
 Run:
 
 ```sh
-node backup
+npm run start
 ```
 
 ## Running as a Docker container
@@ -58,19 +58,19 @@ docker run \
 1. Sign up for a [IBM Kubernetes](https://www.ibm.com/uk-en/cloud/container-service) service.
 2. Follow the instruction on how to install the `ibmcloud` command-line tools.
 3. Authenticate. e.g. `ibmcloud login`
-4. Set the Kubernetes target. e.g. `ibmcloud ks region-set xxxx`
+4. Set the Kubernetes target. e.g. `ibmcloud ks region-set eu-gb`
 5. Download the cluster config e.g. `ibmcloud ks cluster-config scheduledcloudantbackup`
 6. Log into the container registory service e.g. `ibmcloud cr login`
 7. Create a namespace e.g. `ibmcloud cr namespace-add scheduledbackup`
 8. Build an image e.g. `ibmcloud cr build -t uk.icr.io/scheduledbackup/backup:1 .`
 
-So we now have an image called `uk.icr.io/scheduledbackup/backup:1` in the IBM image registry - we next need to trigger that to run periodically with a [Kubernetes cron job](https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/).
+So we now have an image called `uk.icr.io/scheduledbackup/backup:1` in the IBM image registry - we next need to trigger it to run periodically with a [Kubernetes cron job](https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/).
 
 ## Kubernetes cron job
 
-A "cron job" is a term taken from the Unix world - it means running a task periodically, say every hour. It has a syntax indicating the interval at which your code is to be run, in our case we want [0 * * * *](https://crontab.guru/#0_*_*_*_*) which means "at the top of every hour".
+A "cron job" is a term taken from the Unix world - it means running a task periodically, say every hour. It has a syntax specifying the interval at which your code is to be run, in our case we want [0 * * * *](https://crontab.guru/#0_*_*_*_*) which means "at the top of every hour".
 
-Our cron job definition resides in a "cronjob.yml" file which tells the Kubernetes cluster which image to spin up, at what time and the environment variables it runs with. Edit the `cronjob.yml` to configure your Cloudant service and Object Storage details before running:
+Our cron job definition resides in a "cronjob.yml" file which tells the Kubernetes cluster which image to spin up, at what time and the environment variables it runs with. **Edit the `cronjob.yml` to configure your Cloudant service and Object Storage details before running**:
 
 ```sh
 kubectl create -f cronjob.yml
