@@ -35,7 +35,7 @@ npm run start
 
 ## Running as a Docker container
 
-Build the Docker container:
+Build the Docker image:
 
 ```sh
 docker build -t scheduledcloudantbackup .
